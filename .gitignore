@@ -1,0 +1,4 @@
+rust_os/.devcontainer
+rust_os/kernel.map
+rust_os/opensbi-riscv32-generic-fw_dynamic.bin
+rust_os/target
