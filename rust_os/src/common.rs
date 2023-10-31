@@ -43,3 +43,27 @@ fn sbi_call(
     }
     SbiRet { error, value }
 }
+
+pub fn memset(buf: *mut u8, c: u8, n: usize) -> *mut u8 {
+    let mut p = buf;
+    for _ in 0..n {
+        unsafe {
+            *p = c;
+            p = p.add(1);
+        }
+    }
+    p
+}
+
+fn memcpy(dst: *mut u8, src: *const u8, n: usize) -> *mut u8 {
+    let d = dst;
+    let s = src;
+    for _ in 0..n {
+        unsafe {
+            *d = *s;
+            let _ = d.add(1);
+            let _ = s.add(1);
+        }
+    }
+    return dst;
+}

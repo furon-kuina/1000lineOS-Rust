@@ -5,36 +5,41 @@ use core::arch::asm;
 use core::panic::PanicInfo;
 
 mod common;
+use crate::common::memset;
 use crate::common::puts;
 
 #[allow(dead_code)]
 fn kernel_main() {
-    puts("Hello, world!\n");
+    unsafe {
+        memset(__bss as *mut u8, 0, (__bss_end - __bss) as usize);
+    }
+
+    my_panic("booted!");
+    puts("Unreachable");
 
     loop {
         unsafe { asm!("wfi") }
     }
 }
 
+fn my_panic(info: &str) {
+    puts("Kernel panicked: ");
+    puts(info);
+    puts("\n");
+    loop {}
+}
+
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
-    loop {}
+    loop {
+        puts("Kernel panicked: ");
+    }
 }
 
 extern "C" {
     static __bss: u8;
     static __bss_end: u8;
     static __stack_top: u8;
-}
-
-fn memset(buf: *mut u8, c: u8, n: usize) {
-    let mut p = buf;
-    for _ in 0..n {
-        unsafe {
-            *p = c;
-            p = p.add(1);
-        }
-    }
 }
 
 #[no_mangle]
