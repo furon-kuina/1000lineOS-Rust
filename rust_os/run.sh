@@ -1,5 +1,5 @@
 #!/bin/bash
-set -xue
+set -xu
 
 # QEMUのファイルパス
 QEMU=qemu-system-riscv32
